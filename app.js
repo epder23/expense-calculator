@@ -67,7 +67,10 @@ const COUNTRY_PROFILES = [
   { code: "AE", name: "United Arab Emirates", flag: "🇦🇪", currency: "AED", locale: "ar-AE" },
   { code: "AU", name: "Australia", flag: "🇦🇺", currency: "AUD", locale: "en-AU" },
   { code: "CA", name: "Canada", flag: "🇨🇦", currency: "CAD", locale: "en-CA" },
-];
+].map((profile) => ({
+  ...profile,
+  flagImage: `https://flagcdn.com/${profile.code.toLowerCase()}.svg`,
+}));
 
 let activeCountry = COUNTRY_PROFILES[0];
 let currencyFormatter = new Intl.NumberFormat(activeCountry.locale, {
@@ -108,7 +111,18 @@ function updateCurrencyFormatter() {
 }
 
 function updateCountryUI() {
-  if (brandFlag) brandFlag.textContent = activeCountry.flag;
+  if (brandFlag) {
+    brandFlag.textContent = activeCountry.flag;
+    if (activeCountry.flagImage) {
+      brandFlag.style.backgroundImage = `url(${activeCountry.flagImage})`;
+      brandFlag.classList.add("flag-has-image");
+      brandFlag.setAttribute("aria-label", `${activeCountry.name} flag`);
+    } else {
+      brandFlag.style.backgroundImage = "";
+      brandFlag.classList.remove("flag-has-image");
+      brandFlag.removeAttribute("aria-label");
+    }
+  }
   if (brandCountryName) brandCountryName.textContent = activeCountry.name;
   if (heroCountryLabel) heroCountryLabel.textContent = activeCountry.name;
   if (amountCurrencyCode) amountCurrencyCode.textContent = activeCountry.currency;

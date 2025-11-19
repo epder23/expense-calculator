@@ -22,8 +22,26 @@ header {
 }
 
 .brand-flag {
-  font-size: 1.9rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.45rem;
   line-height: 1;
+  border-radius: 50%;
+  border: 2px solid rgba(215, 38, 61, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff center/cover no-repeat;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.brand-flag.flag-has-image {
+  color: transparent;
+}
+
+.brand-flag:hover {
+  transform: scale(1.05);
+  border-color: rgba(215, 38, 61, 0.45);
 }
 
 .navbar {
@@ -33,6 +51,7 @@ header {
 
 .nav-actions {
   min-width: 220px;
+  flex-wrap: nowrap;
 }
 
 .card {
@@ -88,6 +107,11 @@ header {
   padding: 1rem;
   box-shadow: var(--shadow-soft);
 }
+
+.nav-actions .btn {
+  white-space: nowrap;
+}
+
 
 #calc-display {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -161,15 +185,7 @@ header {
   }
 
   .navbar .btn {
-    width: 100%;
-  }
-
-  .nav-actions {
-    width: 100%;
-  }
-
-  .nav-country-select {
-    width: 100%;
+    width: auto;
   }
 }
 
