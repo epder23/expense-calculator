@@ -43,7 +43,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end gap-3" id="mainNav">
+        <div class="collapse navbar-collapse justify-content-end gap-3 flex-lg-wrap" id="mainNav">
           <ul class="navbar-nav align-items-lg-center me-lg-3">
             <li class="nav-item">
               <a class="nav-link" href="#stat-cards">Dashboard</a>
@@ -68,6 +68,16 @@
             </select>
             <button class="btn btn-primary" id="nav-add-expense">
               <i class="bi bi-plus-lg me-1"></i>Add Expense
+            </button>
+          </div>
+          <div class="nav-user d-none" id="nav-user">
+            <div class="nav-user-avatar" id="nav-user-avatar">U</div>
+            <div class="nav-user-meta">
+              <small class="text-muted d-block">Signed in</small>
+              <strong id="nav-user-name">User</strong>
+            </div>
+            <button class="btn btn-outline-danger btn-sm" id="btn-logout">
+              <i class="bi bi-box-arrow-right me-1"></i>Logout
             </button>
           </div>
         </div>
@@ -456,6 +466,64 @@
         </div>
       </section>
     </main>
+
+    <div class="auth-overlay" id="auth-overlay" aria-hidden="true">
+      <div class="auth-panel card border-0 shadow-lg">
+        <div class="card-body p-4 p-md-5">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="brand-flag brand-flag-lg" aria-hidden="true">🔒</div>
+            <div>
+              <p class="text-uppercase small fw-semibold text-muted mb-1" id="auth-title">
+                Welcome back
+              </p>
+              <h2 class="h4 fw-bold mb-0" id="auth-heading">Sign in to continue</h2>
+            </div>
+          </div>
+          <p class="text-muted mb-4" id="auth-caption">
+            Securely access your expense dashboard by entering your credentials.
+          </p>
+          <div class="alert alert-danger d-none" id="auth-error"></div>
+          <form id="auth-form" novalidate>
+            <div class="mb-3 d-none" id="auth-name-group">
+              <label for="auth-name" class="form-label">Full name</label>
+              <input type="text" class="form-control" id="auth-name" placeholder="Jane Miller" />
+            </div>
+            <div class="mb-3">
+              <label for="auth-email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="auth-email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label for="auth-pin" class="form-label">PIN (4-6 digits)</label>
+              <input
+                type="password"
+                class="form-control"
+                id="auth-pin"
+                minlength="4"
+                maxlength="6"
+                pattern="\\d{4,6}"
+                placeholder="••••"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="auth-submit">
+              Sign in
+            </button>
+          </form>
+          <p class="text-center mt-3 mb-0">
+            <span id="auth-mode-label">First time here?</span>
+            <button type="button" class="btn btn-link p-0 align-baseline" id="auth-mode-toggle">
+              Create an account
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
 
     <footer class="py-4 mt-5 text-center text-muted">
       <small>

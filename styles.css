@@ -35,6 +35,12 @@ header {
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
+.brand-flag-lg {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.8rem;
+}
+
 .brand-flag.flag-has-image {
   color: transparent;
 }
@@ -52,6 +58,35 @@ header {
 .nav-actions {
   min-width: 220px;
   flex-wrap: nowrap;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 0 0 1px rgba(215, 38, 61, 0.15);
+}
+
+.nav-user-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d7263d, #f55968);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nav-user-meta small {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .card {
@@ -144,6 +179,40 @@ header {
 
 .calculator-grid .span-2 {
   grid-column: span 2;
+}
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1050;
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease;
+}
+
+.auth-overlay.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.auth-panel {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 1.5rem;
+}
+
+.auth-panel .btn-link {
+  color: #d7263d;
+  text-decoration: none;
+}
+
+.auth-panel .btn-link:hover {
+  text-decoration: underline;
 }
 
 .btn-primary {

@@ -31,12 +31,34 @@ const brandCountryName = document.getElementById("brand-country-name");
 const heroCountryLabel = document.getElementById("hero-country");
 const heroRegionText = document.getElementById("hero-region");
 const amountCurrencyCode = document.getElementById("amount-currency-code");
+const navUser = document.getElementById("nav-user");
+const navUserName = document.getElementById("nav-user-name");
+const navUserAvatar = document.getElementById("nav-user-avatar");
+const btnLogout = document.getElementById("btn-logout");
+const authOverlay = document.getElementById("auth-overlay");
+const authForm = document.getElementById("auth-form");
+const authError = document.getElementById("auth-error");
+const authNameGroup = document.getElementById("auth-name-group");
+const authNameInput = document.getElementById("auth-name");
+const authEmailInput = document.getElementById("auth-email");
+const authPinInput = document.getElementById("auth-pin");
+const authSubmitBtn = document.getElementById("auth-submit");
+const authModeLabel = document.getElementById("auth-mode-label");
+const authModeToggle = document.getElementById("auth-mode-toggle");
+const authTitle = document.getElementById("auth-title");
+const authHeading = document.getElementById("auth-heading");
+const authCaption = document.getElementById("auth-caption");
 
 const STORAGE_KEY = "smart-expense-calculator";
 const STORAGE_COUNTRY_KEY = `${STORAGE_KEY}-country`;
+const STORAGE_ACCOUNT_KEY = `${STORAGE_KEY}-account`;
+const STORAGE_SESSION_KEY = `${STORAGE_KEY}-session`;
 let expenses = [];
 let editingId = null;
 let calcExpression = "0";
+let storedAccount = null;
+let currentUser = null;
+let authMode = "login";
 
 const categoryOptions = [
   "Housing",
@@ -152,6 +174,165 @@ function loadStoredCountryPreference() {
   }
   updateCountryUI();
 }
+
+function loadStoredAccount() {
+  const raw = localStorage.getItem(STORAGE_ACCOUNT_KEY);
+  storedAccount = raw ? JSON.parse(raw) : null;
+}
+
+function persistAccount(account) {
+  storedAccount = account;
+  localStorage.setItem(STORAGE_ACCOUNT_KEY, JSON.stringify(account));
+}
+
+function loadSession() {
+  const raw = localStorage.getItem(STORAGE_SESSION_KEY);
+  currentUser = raw ? JSON.parse(raw) : null;
+}
+
+function persistSession(user) {
+  currentUser = user;
+  localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(user));
+}
+
+function clearSession() {
+  localStorage.removeItem(STORAGE_SESSION_KEY);
+  currentUser = null;
+}
+
+function updateNavUser() {
+  if (!navUser || !navUserName || !navUserAvatar) return;
+  if (currentUser) {
+    navUserName.textContent = currentUser.name;
+    navUserAvatar.textContent = getAvatarInitials(currentUser.name);
+    navUser.classList.remove("d-none");
+  } else {
+    navUser.classList.add("d-none");
+  }
+}
+
+function getAvatarInitials(name = "") {
+  if (!name.trim()) return "U";
+  return name
+    .trim()
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function toggleAuthError(message = "") {
+  if (!authError) return;
+  if (!message) {
+    authError.classList.add("d-none");
+    authError.textContent = "";
+  } else {
+    authError.classList.remove("d-none");
+    authError.textContent = message;
+  }
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  const isRegister = mode === "register";
+  if (authNameGroup) {
+    authNameGroup.classList.toggle("d-none", !isRegister);
+  }
+  if (authSubmitBtn) {
+    authSubmitBtn.textContent = isRegister ? "Create account" : "Sign in";
+  }
+  if (authModeLabel) {
+    authModeLabel.textContent = isRegister ? "Already registered?" : "First time here?";
+  }
+  if (authModeToggle) {
+    authModeToggle.textContent = isRegister ? "Sign in" : "Create an account";
+  }
+  if (authTitle) {
+    authTitle.textContent = isRegister ? "Create secure access" : "Welcome back";
+  }
+  if (authHeading) {
+    authHeading.textContent = isRegister ? "Set up your workspace" : "Sign in to continue";
+  }
+  if (authCaption) {
+    authCaption.textContent = isRegister
+      ? "Create a local profile so we can keep your expense data synced in this browser."
+      : "Enter your credentials to pick up right where you left off.";
+  }
+}
+
+function showAuthOverlay() {
+  if (!authOverlay) return;
+  authOverlay.classList.remove("is-hidden");
+  authOverlay.setAttribute("aria-hidden", "false");
+}
+
+function hideAuthOverlay() {
+  if (!authOverlay) return;
+  authOverlay.classList.add("is-hidden");
+  authOverlay.setAttribute("aria-hidden", "true");
+}
+
+function completeAuthentication(user) {
+  persistSession({ name: user.name, email: user.email });
+  updateNavUser();
+  toggleAuthError("");
+  authForm?.reset();
+  hideAuthOverlay();
+}
+
+function handleAuthSubmit(event) {
+  if (!authForm) return;
+  event.preventDefault();
+  const email = authEmailInput.value.trim().toLowerCase();
+  const pin = authPinInput.value.trim();
+
+  if (!email || !pin) {
+    toggleAuthError("Enter both email and PIN.");
+    return;
+  }
+
+  if (authMode === "register") {
+    const name = authNameInput.value.trim();
+    if (name.length < 3) {
+      toggleAuthError("Full name should be at least 3 characters.");
+      return;
+    }
+    if (!/^\d{4,6}$/.test(pin)) {
+      toggleAuthError("PIN must contain 4-6 digits.");
+      return;
+    }
+    const account = { name, email, pin };
+    persistAccount(account);
+    completeAuthentication(account);
+    return;
+  }
+
+  if (!storedAccount) {
+    toggleAuthError("No account found. Create one first.");
+    return;
+  }
+
+  if (storedAccount.email !== email || storedAccount.pin !== pin) {
+    toggleAuthError("Email or PIN is incorrect.");
+    return;
+  }
+
+  completeAuthentication(storedAccount);
+}
+
+function logoutUser() {
+  clearSession();
+  updateNavUser();
+  if (storedAccount) {
+    setAuthMode("login");
+    authEmailInput.value = storedAccount.email;
+  } else {
+    setAuthMode("register");
+  }
+  showAuthOverlay();
+}
+
 
 function formatCurrency(value) {
   const numeric = Number(value) || 0;
@@ -604,6 +785,22 @@ function registerEventListeners() {
     });
   }
 
+  if (authForm) {
+    authForm.addEventListener("submit", handleAuthSubmit);
+  }
+
+  if (authModeToggle) {
+    authModeToggle.addEventListener("click", () => {
+      const nextMode = authMode === "login" ? "register" : "login";
+      setAuthMode(nextMode);
+      toggleAuthError("");
+    });
+  }
+
+  if (btnLogout) {
+    btnLogout.addEventListener("click", logoutUser);
+  }
+
   calcButtons.forEach((btn) => btn.addEventListener("click", handleCalculatorButtonClick));
 }
 
@@ -613,6 +810,18 @@ function initialize() {
   populateCountrySelect(navCountrySelect);
   loadFromStorage();
   loadStoredCountryPreference();
+  loadStoredAccount();
+  loadSession();
+  if (storedAccount && authEmailInput) {
+    authEmailInput.value = storedAccount.email;
+  }
+  if (currentUser) {
+    hideAuthOverlay();
+  } else {
+    setAuthMode(storedAccount ? "login" : "register");
+    showAuthOverlay();
+  }
+  updateNavUser();
   registerEventListeners();
   updateCalculatorDisplay();
   render();
