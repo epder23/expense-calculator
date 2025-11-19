@@ -1,0 +1,175 @@
+:root {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Arial, sans-serif;
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --bs-primary: #d7263d;
+  --bs-primary-rgb: 215, 38, 61;
+}
+
+body {
+  min-height: 100vh;
+  background-image: radial-gradient(circle at top right, rgba(215, 38, 61, 0.14), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.75), transparent 45%),
+    linear-gradient(135deg, #fff7f7, #ffecec);
+}
+
+header {
+  background: radial-gradient(circle at top left, #ff4d6d, #d7263d);
+}
+
+.navbar-brand {
+  font-size: 1.15rem;
+}
+
+.brand-flag {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.navbar {
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-actions {
+  min-width: 220px;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -35% auto;
+  width: 65%;
+  height: 65%;
+  background: radial-gradient(circle, rgba(215, 38, 61, 0.15), transparent 70%);
+  transform: rotate(-45deg);
+}
+
+#stat-cards h2 {
+  letter-spacing: -0.02em;
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(215, 38, 61, 0.08);
+}
+
+.badge {
+  letter-spacing: 0.08em;
+}
+
+.nav-country-select {
+  min-width: 190px;
+  border-radius: 999px;
+  border-color: rgba(215, 38, 61, 0.4);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.nav-country-select:focus {
+  border-color: #d7263d;
+  box-shadow: 0 0 0 0.15rem rgba(215, 38, 61, 0.25);
+}
+
+.calculator {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+#calc-display {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  border: none;
+  background-color: #fff;
+  color: #d7263d;
+}
+
+#calc-display:focus {
+  box-shadow: none;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.calculator-grid .btn {
+  padding-block: 0.9rem;
+  font-size: 1.05rem;
+  border-radius: 0.75rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.calculator-grid .btn:active {
+  transform: scale(0.97);
+}
+
+.calculator-grid .span-2 {
+  grid-column: span 2;
+}
+
+.btn-primary {
+  background-color: #d7263d;
+  border-color: #d7263d;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #b41e31;
+  border-color: #b41e31;
+}
+
+#category-breakdown .progress {
+  height: 0.5rem;
+  border-radius: 999px;
+}
+
+#category-breakdown .category-row {
+  box-shadow: var(--shadow-soft);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.action-btn {
+  border: none;
+  background: transparent;
+  color: #495057;
+}
+
+.action-btn:hover {
+  color: #d7263d;
+}
+
+@media (max-width: 991px) {
+  header .btn {
+    width: 100%;
+  }
+
+  .navbar .btn {
+    width: 100%;
+  }
+
+  .nav-actions {
+    width: 100%;
+  }
+
+  .nav-country-select {
+    width: 100%;
+  }
+}
+
